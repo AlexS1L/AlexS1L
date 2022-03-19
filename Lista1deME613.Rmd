@@ -1,0 +1,462 @@
+---
+title: "Lista 1 de Análise de Regressão"
+author: "Alex dos Santos Lima, RA:230560"
+date: "13 de Agosto de 2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Resolução da lista (1) de Análise de Regressão.
+
+Nesta resolução iremos usar o seguinte livro com os exercícios.
+Abaixo teremos a lista 1  com os exercícios da quinta edição do livro-texto: "Kutner, Nachtsheim, Neter and Li (2005). Applied Linear Statistical Models. Fifth Edition, McGraw-Hill" (KNNL2005).<p>
+   1.6; 1.7; 2.4; 2.52; 2.64 <p>
+ 
+ 1.6) Consider the normal error regression model (1.24). Suppose that the parameter values are $\beta_0=200,\beta_1=5.0$, and $\sigma=4$.<p>
+        
+  a. Plot this normal error regression model in the fashion of Figura 1.6. Show the distributions of $Y$ for $X$= 10, 20, and 40. <p>
+  b. Explain the meaning of the parametrs $\beta_0$ and $\beta_1$. Assume that the scope of the model includes $X$=0. <p>
+
+1.7) In a simulation exercise, regression model (1.1) applies with $\beta_0=100,\beta_1=20$, and $\sigma^{2}=25$. <p>
+   An observation on $Y$ will be made for $X=5$. 
+
+  a. Can you state the exact probability tha $Y$ will fall between 195 and 205? Explain. <p>
+  b. If the normal error regression model (1.24) is applicable, can you now state the exact probability that $Y$ will fall between 195 and 205? If so, state it. <p>
+
+2.4) Refer to **Grade point average** Problem 1.19. <p>
+
+   a. Obtain a 99 percent confidence interval for $\beta_1$. Interpret your confidence interval. Does it include zero? Why might the director of admissions be interested in whether the confidence
+interval includes rero? <p>
+  b. Test, using the test statistic $t^{*}$, whether or not a linear association exists between student's ACT score $(X)$ and $GPA$ at the end of the freshman year $(Y)$. Use a level of significance of .Ol. State the alternatives, decision rule, and conclusion. <p>
+  c. What is the P-value of your test in part (b)? How does it support the conclusion reached in
+part (b)? <p>
+
+  2.52) Derive the expression in (2.22b) for the variance of $b_0$, making use of (2.31). Also explain how variande (2.22b) is a special case of variance (2.29b).<p>
+
+  2.64) Refer to the **SENIC** data set in Appendix C.1 and Project 1.45. Using $R^{2}$ as the criterion, which predictor variable accounts for the largest reduction in the variability of the average length of stay?
+
+#  Fazendo a tradução e resolvendo os exercícios logo abaixo.
+
+1.6) Considerar o modelo de regressão de erro normal (1.24). Suponha que os valores dos parâmetros são $\beta_0=200,\beta_1=5,0$, e $\sigma=4$.<p>
+  
+  a. Plotar este modelo de regressão de erro normal à modelo da Figura 1.6. Mostrar as distribuições de $Y$ por $X$= 10, 20, e 40. <p>
+  
+**Resposta:**<p>
+
+Seja o modelo de erro normal de regressão linear simple .<p>
+$$
+Y_{i}=\beta_{0}+\beta_{1}X_{i}+\epsilon_{i}
+$$
+Onde:
+$Y_i$ é a observação da resposta do i<p>
+$X_{i}$ é uma constante conhecida, o nivel da variável preditora no i<p>
+$\beta_{0}$ e $\beta_{1}$ são parametros<p>
+$\epsilon_{i}$ são independente em $N(0,\sigma^{2})$<p>
+i=1,...,n<p>
+Então temos:<p>
+$$
+Y_{i}=200+5X_{i}+\epsilon_{i}
+$$
+Sendo $X_{i}, i=1,2,3$ para $X_{1}=10,X_{2}=20,X_{3}=40$ <p>
+onde $\epsilon_{i}$ são independente em  $N(0,\sigma^{2})=N(0,16)$ com $\sigma=4$.<p>
+Da distribuição de probabilidade qual á média é a esperança :<p>
+$$
+E[Y_{i}]=200+5X_{i}
+$$
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=.60\textwidth,height=.55\textheight  ]{/home/stat-lab105/Downloads/20210814_160515.jpg}
+\end{center}
+\end{figure}
+\centerline{Figura 1: Distribuição da esperança de cada valor e sua média}
+
+
+
+
+```{r,comment="", echo=FALSE, fig.align='center',out.width="200px"}
+## Gráficos de pontos 
+b0 = 200;b1 = 5 
+sigma = 4
+e = rnorm(3, sd = sigma)
+x = c(10,20,40);y = b1*x + b0 + e
+
+plot(y, main = "Gráfico dos pontos 10, 20, e 40." ,
+     xlab = "Valores observados em X",
+     ylab = "Valores observados em y")
+              
+```
+
+
+  b. Explicar o significado dos parametros $\beta_0$ e $\beta_1$. Assumir que o âmbito do modelo inclui $X$=0.
+  
+**Resposta:**
+
+  O $\beta_0$ é o intercepto do modelo de regressão linear simples, ou seja, quando $X$ assume $0$ (zero). O valor de $Y$ é exatamente igual a $0$ e temos que $\beta_0=200$.<p>
+Desta maneira, $\beta_1$ é coeficiente angular do modelo de regressão linear simples, ou seja, a cada incremento unitário em $X$ aumentamos $\beta_1$ unidade(s) em $X$, logo o  $\beta_1=5,0$.<p>
+
+
+1.7) Num exercício de simulação, o modelo de regressão (1.1) aplica-se com $\beta_0=100,\beta_1=20$, e $\sigma^{2}=25$.
+ Uma observação sobre $Y$ será feita por $X=5$. 
+
+  a. Pode indicar a probabilidade exacta de $Y$ cair entre 195 e 205? Explique. <p>
+  
+**Resposta:**<p>
+    
+Não, podemos fazer porque não é definido uma definição para o modelo.<p>
+    
+
+  b. Se o modelo de regressão de erro normal (1,24) for aplicável, pode agora indicar a probabilidade exacta de $Y$ cair entre 195 e 205? Em caso afirmativo, declare-o. <p>
+  
+**Resposta:**<p>
+
+Sendo assim a fórmula logo abaixo é calculada com probabilidade de valores da média $\mu$, como $Y$ não é  media para cair entre 195 e 205. Sendo assim a função de densidade conjunta é dada pela probabilidade que cálculo o valor centrado na média é essa.<p>
+$$
+f_{i}=\frac{1}{\sqrt{2\pi\sigma}}exp\left[ -\frac{1}{2}\left( \frac{Y_{i}-\beta_{0}-\beta_{1}X_{i}}{\sigma} \right)^{2} \right]
+$$
+  Logo vamos usar outra fórmula que faz os cálculos entre dois valores. Vamos agora assumir um erro na distribuição normal em $\epsilon$. Sendo a probabilidade da distribuição de $Y$ para cada valor de $X=x$ e para normal com média e variância dada. Para $X=5$ testem aos valores da esperança $E[X]=\beta_{0}+\beta_{1}X=100+20*5=200$ e $\sigma^{2}=25$ respectivamente. A exata probabilidade seguir.<p>
+$$
+P(195 \leq Y \leq 205)= P \left( \frac{195-200}{5} \leq \frac{X- \mu}{\sigma} \leq \frac{205-200}{5} \right)
+$$
+$$
+=P(-1 \leq Z \leq 1)=2*P(Z \leq 1)-1=0.6826
+$$
+Pela tabela da normal.
+```{r, echo=FALSE, comment="", fig.align='center', out.height="350px",out.width="250px"}
+## Gráfico da normal
+x <- seq(-3, 3, length = 501)
+plot(x, dnorm(x), axes = FALSE, type =
+'l', xlab = '',ylab = '') ; abline(h = 0)
+x <- 0 ; lines(c(0, 0), c(dnorm(x), -0.01))
+x <- -1 ; lines(c(-1, 0), c(dnorm(x),
+dnorm(x)))
+arrows(-1, dnorm(x), 0, dnorm(x), code= 3, length = 0.1)
+text(0.2, 0.2, expression(italic(mu)))
+text(-0.5, 0.26,
+expression(italic(sigma)))
+```
+
+  A probabilidade exata de $Y$ cair entre 195 e 205 é quando o valor esperado seja $X$=5 em $E[Y]=200$. Sim, pode cair com uma probabilidade de 0.68<p>
+  
+
+
+2.4) Consultar **Média de pontos** Problema 1.19. <p>
+
+O banco de  dados em **Média de pontos**  do Problema 1.19.<p>
+```{r, echo=FALSE,comment="", fig.align='center'}
+dados1 <- read.table("~/dados1.txt", quote="\"", comment.char="")
+knitr::kable(head(dados1), caption = "Conjunto de dados com as 6 primeiras linhas")
+```
+  
+   a. Obter um intervalo de confiança de 99 por cento por $\beta_1$. Interprete o seu intervalo de confiança. Inclui zero? Porque estaria o director de admissões interessado em saber se o intervalo de confiança intervalo inclui zero? <p>
+   
+**Resposta:**<p>
+
+Um intervalo dde $100(1-\alpha)\%$ de confiança para $\beta_1$ é dado pela seguinte formula:<p>
+
+\centerline{\large \bf$100(1-\alpha)\%=\left[\hat{\beta_1} -  t_{n-2,\alpha/2}\sqrt{\dfrac{S^{2}}{\sum\limits_{i=1}^n(X_i-\overline{X})^{2}}};\hat{\beta_1} +  t_{n-2,\alpha/2}\sqrt{\dfrac{S^{2}}{\sum\limits_{i=1}^n(X_i-\overline{X})^{2}}}\right]$}
+
+Em que $S^{2}$ é descrito pela seguinte fórmula logo abaixo<p>
+
+\centerline{\large \bf$S^{2}=\frac{\sum\limits_{i=1}^n(Y_i-\hat{Y})^{2}}{n-2}$}
+
+Vamos cálcular o valor de $t_{n-2,\alpha/2}= t_{120-2,\dfrac{0.01}{2}}=t_{118,5*10^{-3}}$<p>
+Como encontrar $t_{n-2,\alpha/2}$<p>
+
+\centerline{\large \bf$P(-t_{n-2,\alpha/2}<T<t_{n-2,\alpha/2})=1 - \alpha$}
+
+
+$P(-t_{n-2,\alpha/2}<T<t_{n-2,\alpha/2})=1 - 0.99=0.01$<p>
+Com esses valores aqui visto na tabela de $t$<p>
+Gral de liberdade = 118<p>
+Probabilidade para um teste bicaudal =0.995<p>
+    
+$P(- 2.618137 < T < 2.618137)=0.01$<p>
+
+Desvio padrão:<p>
+$\sigma=0.01277$<p>
+Estatísitca do teste $t$:<p>
+$t_{(1-\frac{\alpha}{2},n-2)}=2.6181$<p>
+O nível de significância.:<p>
+$\alpha=99\%$<p>
+Calcálo do modelo ajustado em Regressão Linear Simples:<p>
+$Y_{i}=2.114 + 0.0388 X_{i}$<p>
+```{r, echo=FALSE,comment="",message=FALSE}
+## Biblioteca usada para resover a questão 2.4
+library(readxl)
+library(readr)
+library(gdata)
+## Leitura de conjunto de dados em **Média de pontos**  do Problema 1.19
+dados1 <- read.table("~/dados1.txt", quote="\"", comment.char="")
+## Ajuste do modelo de Regressão Linear Simples
+fit <- lm(dados1$V1~dados1$V2)
+a<-summary(fit)
+apha <- 0.995
+tvalor<- qt(apha, df= 120-2)
+
+
+intvl<- confint(fit, level =  0.99 ,df =fit$df) # aqui alpha= 0.99 pegamos 1-0.99=0.01
+s2 <- sum((dados1$V2-mean(dados1$V2))^2)
+```
+
+\begin{table}[ht]
+\centering
+\caption{I.C. para $\beta_1$ em $99\%$ }
+\begin{tabular}{rrr}
+  \hline
+ & 0.5 \% & 99.5 \% \\ 
+  \hline
+($\beta_{0}$) & 1.273902675 & 2.95419590 \\ 
+   $\beta_{1}$ &0.005385614 & 0.07226864\\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[ht]
+\caption{Estatística da Regressão Linear Simples.}
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimativa & S. Q. dos Erros & t value & Pr($>$$|$t$|$) \\ 
+  \hline
+($\beta_{0}$) & 2.1140 & 0.3209 & 6.59 & 0.0000 \\ 
+  $\beta_{1}$ & 0.0388 & 0.0128 & 3.04 & 0.0029 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+$99\%$ I.C. para $\beta_1:b_{1}-t_{(1-\frac{\alpha}{2},n-2)}s(b_{1}) \leq \beta_{1} \leq b_{1}+t_{(1-\frac{\alpha}{2},n-2)}s(b_{1})=0.00538 \leq \beta_{1} \leq 0.07226$<p>
+$t(.995; 118) = 2.61814, .03883 ± 2.61814(.01277))$<p>
+
+No intervalo do I.C. caso seja incluído zero, o $\beta_{1}$ pode ser zero e  $\beta_{1}=0$<p>
+$b_{1}==0.00538 \leq \beta_{1} \leq 0.07226$<p>
+
+  Interpretação do Intervalo de Confiança para$\beta_{1}$:<p>
+
+ Se repetirmos o experimento com n=120 e os mesmos valores fixos de $X$ dessa amostra e um número muito grande de vezes, o intervalo assim construído cobrirá o verdadeiro valor de $\beta_{1}$ em $99\%$ das amostras. Assim, caso inclui o $0$, $X$ no caso os pontos médios podam não ter uma importância estatisticamente para estimar $Y$ sendo a resposta de interesse. Estamos dizemos com basamento com no intervalo de confiança com $99\%$ por cento.<p>
+
+
+  b. Teste, utilizando a estatística do teste $t^{*}$, quer exista ou não uma associação linear entre a pontuação ACT do estudante $(X)$ e $GPA$ no final do ano de caloiro $(Y)$. Utilizar um nível de significância de $0.01$. Indique as alternativas, a regra da decisão e a conclusão. <p>
+
+**Resposta:**<p>
+  
+1.O nível de significância:<p>
+
+$\alpha=0.01$<p>
+
+2. Hipóteses para ser testada<p>
+
+$H_{0}$:$\beta_{1}=0$<p>
+$H_{1}$:$\beta_{1} \neq 0$<p>
+
+3. Estatística do Teste<p>
+
+```{r, comment="", echo=FALSE}
+dados1 <- read.table("~/dados1.txt", quote="\"", comment.char="")
+intervalo <-  confint(fit, level = 0.01 ,df =fit$df)
+alfa <-1-(0.01/2)                  #obtendo o alpha
+ttab<-qt(alfa,df=120-2)#obtendo o valor do t tabelado
+
+```
+
+Resultado através do modelo ajustado em (a) onde $0.03883$ é a soma dos quadrados da regressão para o valor do $\beta_{1}$ testando quando o $\beta_{1}=0$ na hipótese nula e alternativa temos que $\beta_{1} \neq 0$, e no dominador é somatória dos quadrados médio dos erros sendo $0.01277$.
+$T_{0}=\dfrac{b_{1}-\beta_{10}}{s(b_{1})}= \dfrac{b_{1}}{s(b_{1})}= \dfrac{(0.03883-0)}{0.01277}=3.04072$ <p>
+
+4. Interpretação  da questão b)<p>
+
+Decisão: Rejeita $H_{0}$ se |$T_{0}$| > $t_{(1-\frac{\alpha}{2},n-2)}, 3.04$   
+Se $|t_{(0.995,118)}^{*} | \leq 2.618137$  concluimos $H_{0}$, de outra forma $H_{a}$, Concluimos $H_{a}$<p>
+O que  faz rejeitar $H_{0}$<p>
+  A um nível de significância de $1\%$ porcento, considerando o teste t, rejeitamos a hipótese nula, ou seja, $X$ é estatisticamente significante para estimar $Y$.<p>
+
+ c. Qual é o P-valor do seu teste em parte (b)? Como é que apoia a conclusão alcançada em parte (b)? <p>
+ 
+**Resposta:**<p>
+
+\begin{table}[ht]
+\caption{Anova para valor-p}
+\centering
+\begin{tabular}{lrrrrr}
+  \hline
+ & Gral de L. & Soma S. Q. & Média dos S. Q & Valor de  F  & Pr($>$F) \\ 
+  \hline
+$\beta_{1}$ & 1 & 3.59 & 3.59 & 9.24 & 0.0029 \\ 
+  Residuals & 118 & 45.82 & 0.39 &  &  \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+Cálcular o p-valor ele é calculado na saida do modelo ajustado em (a);<p>
+
+Como  p-valor=$0.00291 <0.01$, o que concluimos que devemos rejeitar $H_{0}$<p>
+
+
+
+ 2.52) Derivar a expressão em (2.22b) para a variação de $b_0$, fazendo uso de (2.31). Explicar também como variande (2.22b) é um caso especial de variância (2.29b).<p>
+    
+**Resposta:**<p>
+
+A expressão em (2.22b) é essa logo abaixo.<p>
+$$
+\sigma^{2}\left\{b_{0} \right\} = \sigma^{2}\left[\frac{1}{n} +\frac{\overline{X}^{2}}{\sum(X_{i}-\overline{X})^{2}}\right] 
+$$
+Resolvando temos que. <p>
+
+$$
+\sigma^{2}\left\{b_{0} \right\} = \\
+\sigma^{2}\left\{ \overline{Y}-b_{1}\overline{X} \right\}=\\
+\sigma^{2}\left\{ \overline{Y} \right\}+\overline{X}^{2}\sigma^{2}\left\{ b_{1} \right\}-2\overline{X}\sigma\left\{ \overline{Y},b_{1} \right\}\\
+$$
+$$
+=\frac{\sigma^{2}}{n}+ \overline{X} \frac{\sigma^{2}}{\sum(X_{i}-\overline{X})^{2}}-0
+$$  
+$$
+=\sigma^{2}\left[  \dfrac{1}{n} +\frac{\overline{X^{2}}}{\sum(X_{i}-\overline{X}^{2})}\right] 
+$$
+ Na expressão da variânça em (2.22b) é
+$$
+\sigma^{2}\left\{b_{0} \right\} = \sigma^{2}\left[\frac{1}{n} +\frac{\overline{X}^{2}}{\sum(X_{i}-\overline{X})^{2}}\right] 
+$$
+e a variânça em (2.29b) é 
+$$
+\sigma^{2}\left\{ \hat{Y_{H}} \right\} = \sigma^{2}\left[\frac{1}{n} +\frac{(X_{h}-\overline{X})^{2}}{\sum(X_{i}-\overline{X})^{2}}\right] 
+$$
+
+  Em (2.22b) a função de $\sigma^{2}\left\{b_{0} \right\}$ monótonas decrescentes em $S_{XX}$, por exemplo, num desenho experimental em que $S_{XX}$ forem os maiores possíveis valores de X ao definir um tamanho da amostra possível com os valores de $X_{min}$ e $X_{max}$, por linearidade, parece ser razoável fixar o valor de $X$ como $X_{mim}$ em metade e $X_{max}$ na outra metade. Agora em (2.29b) a variância da questão é a predição de uma nova observação, tanto podemos querer predizer o valor para um nível de $X_{h}$ presente no experimento como para um novo nível de predição. No caso de $E[Y_{h}]$ temos uma quantidade determinística que só é desconhecida por não sabermos os valores de $\beta_{0}$ e $\beta_{1}$. Assim, $\sigma\left\{Y_{h} \right\} \rightarrow 0$ quadno $n \rightarrow \infty$, pois $\hat{\beta_{0}}$ e $\hat{\beta_{1}}$ são consistentes. Sendo assim divide-se o problema de predição nos casos de parâmetros: conhecidos; e desconhecidos.
+  
+ 
+  2.64) Consultar o conjunto de dados **SENIC** no Apêndice C.1 e Projecto 1.45. Usando $R^{2}$ como critério, que prevê a maior redução na variabilidade da duração média da estadia?<p>
+  
+**Resposta:**<p>
+
+Sendo assim, os maiores $R^{2}$ que prevê a maior redução na variablidade são esses logo abaixo.<p>
+Taxa de infecção: $R^{2}=0,2846$ <p>
+Instalações: $R^{2}=0,1264$<p>
+X-raio:$R^{2}=0,1463$<p>
+
+Usando o coeficiente de determinação o $R^{2}$ sendo a formula logo abaixo.<p>
+Calculando usando o $R^{2}$<p>
+$$
+r^{2} = \frac{\sum_{i=1}^{n}(\hat{Y_{i}}-\overline{Y})^{2}}{\sum_{i=1}^{n}(Y_{i}-\overline{Y})^{2}}=1-\frac{\sum_{i=1}^{n}e_{i}^{2}/(n-1)}{\sum_{i=1}^{n}(Y_{i}-\overline{Y})^{2}/(n-1)}
+$$
+Banco de daddos em  **SENIC** no Apêndice C.1 e Projecto 1.45<p>
+```{r, echo=FALSE, comment="", fig.align='center'}
+dados <- read.table("~/dados.txt", quote="\"", comment.char="")
+dados <- dados[,-(1)]
+knitr::kable(head(dados),caption = "Conjunto de dados com as 6 primeiras linhas")
+```
+
+
+  
+```{r, echo=FALSE, comment=""}
+    
+dados <- read.table("~/dados.txt", quote="\"", comment.char="")
+
+anv<- anova(lm(dados))
+sy <- summary(lm(dados))
+y <- dados$V2
+x <- c(dados$V6) 
+beta1 <- cor(y, x) * sd(y) / sd(x)
+beta0 <- mean(y) - beta1 * mean(x)
+y_chapeu <- beta0 +beta1*x
+y_barra <- mean(y)
+r_quadrado <- sum((y_chapeu-y_barra)^2)/sum((y-y_barra)^2) 
+```
+ 
+
+                
+                
+\newpage
+
+# Códigio usado para realizer a Lista 1
+
+## Código usado na questão 1.6
+
+## Gráficos de pontos 
+
+- b0 = 200;b1 = 5<p>
+- sigma = 4<p>
+- e = rnorm(3, sd = sigma)<p>
+- x = c(10,20,40);y = b1*x + b0 + e<p>
+
+- plot(y, main = "Gráfico dos pontos 10, 20, e 40." ,<p>
+     xlab = "Valores observados em X",<p>
+     ylab = "Valores observados em y")<p>
+     
+     
+## Código usado na questão 1.7
+
+## Gráfico da normal
+
+- x <- seq(-3, 3, length = 501)
+- plot(x, dnorm(x), axes = FALSE, type = 'l', xlab = '',ylab = '') ; abline(h = 0)
+- x <- 0 ; lines(c(0, 0), c(dnorm(x), -0.01))
+- x <- -1 ; lines(c(-1, 0), c(dnorm(x),
+  dnorm(x)))
+arrows(-1, dnorm(x), 0, dnorm(x), code= 3, length = 0.1)
+text(0.2, 0.2, expression(italic(mu)))
+text(-0.5, 0.26,
+expression(italic(sigma)))
+
+# Código uado na questão 2.4
+
+## Leitura do conjunto de dados 
+
+- NO banco de  dados em **Média de pontos**  do Problema 1.19
+- dados1 <- read.table("~/dados1.txt", quote="\"", comment.char="")
+- knitr::kable(head(dados1), caption = "Conjunto de dados com as primeira linhas")
+
+## Biblioteca usada para resover a questão 2.4
+
+- library(readxl)
+- library(readr)
+- library(gdata)
+
+## Leitura de conjunto de dados em **Média de pontos**  do Problema 1.19
+
+- dados1 <- read.table("~/dados1.txt", quote="\"", comment.char="")
+
+## Ajuste do modelo de Regressão Linear Simples
+
+- fit <- lm(dados1\$V1~dados1\$V2)
+- a<-summary(fit)
+- apha <- 0.995
+- tvalor<- qt(apha, df= 120-2)
+- intvl<- confint(fit, level = apha,df =fit$df) - aqui alpha= 0.99 pegamos 1-0.99=0.01
+- s2 <- sum((dados1\$V1-mean(dados1\$V1))^2)
+
+## b)
+
+- intervalo <-  confint(fit, level = 0.01 ,df =fit$df)
+- alfa <-1-(0.01/2)                 obtendo o alpha
+- ttab<-qt(alfa,df=120-2)           obtendo o valor do t tabelado
+
+## Questão 2.64
+
+## Leiturado do conunto de dados para questão 2.64
+
+- dados <- read.table("~/dados.txt", quote="\"", comment.char="")
+- dados <- dados[,-(1)] - retirando uma coluna de index
+- knitr::kable(head(dados),caption = "Conjunto de dados com as primeiras linhas")
+
+## Cálculo do $R^{2}$
+
+- dados <- read.table("~/dados.txt", quote="\"", comment.char="")
+- dados <- dados[,-(1)]
+- anv<- anova(lm(dados))
+- sy <- summary(lm(dados))
+- y <-dados$V2
+- x <- c(dados$V4) 
+- beta1 <- cor(y, x) * sd(y) / sd(x)
+- beta0 <- mean(y) - beta1 * mean(x)
+- y_chapeu <- beta0 +beta1*x
+- y_barra <- mean(y)
+- r_quadrado <- sum((y_chapeu-y_barra)^2)/sum((y-y_barra)^2)                 
+

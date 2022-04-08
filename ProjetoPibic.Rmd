@@ -1,0 +1,1203 @@
+---
+title: ""
+author: ""
+date: ''
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=4cm,height=4cm]{/home/alex/Downloads/logo-unicamp-name-line-blk-red-0160.jpg}
+\end{center}
+\end{figure}
+&nbsp;
+\centerline{\Huge Universidade Estadual de Campinas}
+&nbsp;
+
+\centerline{\Large Instituto de Matemática, Estatística e Computação Científica}
+&nbsp;
+
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+\centerline{\Huge{\emph{Identificação de respondentes precoces}}}
+&nbsp;
+
+\centerline{\Huge{\emph{baseados em sinais de EEG}}}
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+&nbsp;
+
+
+
+&nbsp;
+
+&nbsp;
+
+
+
+&nbsp;
+
+&nbsp;
+
+
+
+\centerline{Campinas}
+&nbsp;
+\centerline{2022}
+
+\newpage
+
+\centerline{\large Alex Dos Santos Lima RA: 230560 }
+&nbsp;
+
+\centerline{\Large Identificação de respondentes precoces baseados em sinais de EEG}
+&nbsp;
+
+
+&nbsp;
+
+\centerline{\large Projeto de Iniciação Científica com uma}
+&nbsp;
+\centerline{\large ANÁLISE EXPLORATÓRIA DOS DADOS EEG}
+&nbsp;
+
+
+&nbsp;
+
+
+&nbsp;
+
+\begin{flushright}
+Trabalho realizado ao Curso de Estatística da\\
+Universidade Estadual de Campinas \textit{(UNICAMP)} como\\
+requisito para aprovação do Programa Institucional de \\
+Bolsas de Iniciação Científica o \textit{PIBIC}  da \textit{UNICAMP}\\
+realizado pelo projeto de Iniciação Científica tendo como\\
+busca de ampliar a formação acadêmica com essa pesquisa.\\
+\end{flushright}
+&nbsp;
+
+
+&nbsp;
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+&nbsp;
+
+
+
+
+&nbsp;
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+\centerline{\large Período do projeto de Iniciação Científica}
+
+&nbsp;
+\centerline{\large 1 de Janeiro à 31 Agosto de 2022}
+&nbsp;
+
+&nbsp;
+&nbsp;
+
+
+&nbsp;
+
+
+\centerline{\Large \textit{Orientador(a):} Nancy Lopes Garcia}
+
+&nbsp;
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+
+
+&nbsp;
+
+\centerline{\large{Campinas, (SP)}}
+&nbsp;
+
+\centerline{\large{2022}}
+\newpage
+\centerline{\Huge Agradecimento}
+Os meus agradecimentos vão para a professora Nancy Lopes Garcia e todos os meus familiares e amigos
+que me apoiaram no projeto do Programa de Iniciação Científica e Tecnológica da UNICAMP, Universidade
+Estadual de Campinas. Também agradeço imensamente a Universidade por me dar essa oportunidade de
+participar do projeto de Iniciação Científica.
+\centerline{\Huge Resumo}
+O presente trabalho tem como objetivo de fazer uma análise exploratória profunda dos dados de eletroence-
+falograma realizado em 96 pacientes com depressão, a fim de realizar um estudo para identificar através das
+análises quais são os tratamentos antidepressivo devido ao placebo (uma melhora nos sintomas não devido ao
+efeito dos produtos químicos em todos os pacientes) é altamente prevalente mas não se apresenta em todos
+os pacientes. Assim, a finalidade é identificar quem precisa ser paciente do grupo placebo, ou seja, sem o uso
+de medicamento químico e os pacientes que são tratamento, com medicamentos são considerado tratamento
+controle. Esses pacientes foram respondentes precoces entre os dois grupos. Também foram considerados as
+variáveis escalares como sexo e cronicidade (gravidade da doença), sinais de eletroencefalograma (EEG) são
+muito úteis pois além de serem altamente correlacionadas e utilizados na identificação de doenças são não
+invasivos. O objetivo deste estudo é identificar quais as covariáveis podem ser utilizadas para prever que um
+paciente seja um respondente precoce.
+
+# Introdução
+
+Nosso conjunto de dados consiste de um experimento clínico placebo-controlado aleatorizado para depressão
+já analisado na literatura utilizando técnicas estatísticas como componentes principais matriciais *(Tarpey, Petkova, Ogdan (2003))*. Um dos objetivos destes estudos é identificar o subgrupo de indivíduos que ap-
+resentam melhora durante os primeiros momentos de tratamento com antidepressivos, o que pode ser uma
+indicação do efeito placebo e não uma resposta ao tratamento. Os dados sob estudo estão apresentados na
+Figura 1. Cada paciente foi avaliado por especialista e foi atribuída uma nota na Escala de Avaliação de
+Depressão de Hamilton *( HAM-D )* tanto no início do estudo quanto após uma semana. Os dados a serem
+analisados é a diferença entre estas duas medidas. Sabe-se que os antidepressivos da classe de recaptação
+seletiva de serotonina inibidora (ISRSs) não começam a exercer seu efeito até pelo menos duas semanas
+de tratamento, período no qual os níveis de serotonina podem se acumular no cérebro e exercer um efeito
+terapêutico ( por exemplo, Quitkin at a. *(1991)* ; Steward et al. *(1998)*; Sonawlla e Rosenbaum *(2002)*). Portanto, uma melhoria inicial entre os pacientes tratados com estes medicamentos é uma indicação de
+uma resposta ao placebo em vez de uma verdadeira resposta de efeito do medicamento.
+```{r, include=FALSE}
+# Chamada do banco de dados 
+load("/home/alex/Downloads/Early.RData")
+# Pacote que será usado
+library(tidyverse)
+library(scales)
+library(ggpubr)#
+library(ggplot2)
+library(nycflights13)
+library(ggthemes)
+library(cowplot)
+```
+
+```{r,echo=FALSE,fig.align='center',fig.width = 8, fig.height = 3,out.width = "250px", out.height="250px"}
+
+# Arrumando os dados
+Tfinal = scalar_all %>%
+  mutate(Resposta = y)
+# Gráfico de Histograma e Dispersão... Esse gráfico ficou bom. 
+par(mfrow=c(1,2))
+hist(Tfinal$Resposta, br=seq(-10,25, by=1.5),
+     xlab = "Resultado da primeira semana",
+     ylab = "Frequências",
+     main = "Histograma",
+     col = "white",
+     prob=TRUE)
+lines(density(Tfinal$Resposta), col="blue")
+plot(Tfinal$Resposta,
+     main = "Dispersão",
+     xlab="Pontos de dispersão na escala HAM-D",
+     ylab="Resultado da primeira semana")
+abline(h=0)
+```
+\centerline{Figura 1: Gráfico do Histograma e Dispersão das resultado do teste clínico na primeira semana dos pacientes}
+Na Figura 1: Encontra-se o gŕaifco de Dispersão e Histograma da mudança na escala HAM-D \textbf{(y} mostrando
+a melhora obtida pelo paciente nos sintomas de depressão após uma semana para pacientes em ambos os
+grupos controle e tratamento. Esses gráficos se referem às respostas esperadas pelos pacientes que realizaram
+os testes clínicos dos dois grupos. Então, o projeto científico terá o seguinte formato: na primeira seção será
+feito uma análise exploratória dos dados para entender o comportamento de todas as variáveis no conjunto
+de dados.
+
+# Análise Exploratória dos dados
+
+Nesta seção de análise exploratória dos dados ao qual foi feito um experimento placebo-controlado aleator-
+izado para depressão usando como componente matriciais \textbf{(Tarpey, Petkova, Ogdan (2003))} realizado pelos
+96 pacientes com o objetivo de identificar o subgrupo de indivíduos que apresentam melhora durante os
+primeiros momentos de tratamento com antidepressivos, portanto o projeto da pesquisa terá como propósito
+distinguir algumas correlações entre as variáveis presentes no banco de dados.
+
+## 2.1 Gráficos dos Hitogramas
+
+Ao ilustrar algumas análise no gráfico do hitograma, sendo esse gráfico uma espécie de barras que demonstra
+uma distruibuição de frequências. Deste modo, o banco de dados, será análise em cada semanas que os
+pacientes entram em tratamento clínico por aquele gráfico. Na Figura 2, percebemos que foram registrado
+até a \textbf{6} a semanas de tratamentos entre os dois grupos placebo e controle.
+
+```{r,echo=FALSE,fig.align='center',fig.width = 8, fig.height = 6,out.width = "300px", out.height="300px"}
+
+## Primeiro, temos que arrumar os dados 
+
+tabela=scalar_all %>% as_tibble()%>%
+  transmute(hamd_17_score_wk1=ifelse(hamd_17_score_wk1=="NA",0,hamd_17_score_wk1),
+            hamd_17_score_wk2=ifelse(hamd_17_score_wk2=="NA",0,hamd_17_score_wk2),
+            hamd_17_score_wk3=ifelse(hamd_17_score_wk3=="NA",0,hamd_17_score_wk3),
+            hamd_17_score_wk4=ifelse(hamd_17_score_wk4=="NA",0,hamd_17_score_wk4),
+            hamd_17_score_wk6=ifelse(hamd_17_score_wk6=="NA",0,hamd_17_score_wk6),
+            hamd_17_score_wk8=ifelse(hamd_17_score_wk8=="NA",0,hamd_17_score_wk8),
+            hamd_17_score_eval=hamd_17_score_eval) %>%
+  drop_na()
+
+newdata = tabela %>%
+  summarise(Semana1 = hamd_17_score_eval- hamd_17_score_wk1,
+            Semana2 = hamd_17_score_eval-hamd_17_score_wk2,
+            Semana3 = hamd_17_score_eval-hamd_17_score_wk3,
+            Semana4 = hamd_17_score_eval-hamd_17_score_wk4,
+            Semana6 = hamd_17_score_eval-hamd_17_score_wk6,
+            Semana7 = hamd_17_score_eval-hamd_17_score_wk8)%>%
+  dplyr::select(Semana1 = Semana1,
+                Semana2 = Semana2,
+                Semana3 = Semana3,
+                Semana4 = Semana4,
+                Semana6 = Semana6,
+                Semana7 = Semana7)%>%
+  pivot_longer(cols = c(Semana1,Semana2,Semana3,Semana4,Semana6,Semana7), names_to= "Semana1",
+               values_to = "Valores")
+
+# Gráfico dos histograma em cada semana ....Esse gráfico ficou bom. 
+
+newdata %>%
+  group_by(Semana1)%>%
+  ggplot()+
+  theme_bw()+
+  theme(legend.position = "none", 
+        plot.title = element_text(hjust = 0.5),
+        strip.placement ="outside",
+        strip.background =element_rect(fill="white"),
+        axis.title = element_blank(), 
+        strip.text.y = element_text(size = 7))+
+  geom_histogram(aes(x=Valores), color="black", fill="lightblue",bins = 30) +
+  facet_wrap(~Semana1) +
+  ylab("Frequência")+
+  scale_alpha_binned()+
+  labs(caption = "",
+       x="",y="",
+       title = "Gráfico de histograma de cada semana")+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+```
+\centerline{Figura 2: Gráficos das seguintes semanas}
+Durante as primeiras semanas de teste, às pontuações numa Escala de Avaliação de Depressão de Hamilton
+\textbf{(HAM-D)} foram registradas tanto no início do estudo quanto após uma semana. Como é visto na Figura 2,
+tem todas as distribuição de cada pontuação ao longo da semana com todos os 96 pacientes. Desta maneira,
+será representado de outra maneira a distribuição da escala de \textbf{(HAM-D)} no Histograma da Figura 3.
+```{r,echo=FALSE,fig.align='center',fig.width = 8, fig.height = 6,out.width = "300px", out.height="300px"}
+
+newdata %>%
+  group_by(Semana1)%>%
+  ggplot()+
+  theme_bw()+
+  theme(legend.position = "none", 
+        plot.title = element_text(hjust = 0.5),
+        strip.placement ="outside",
+        strip.background =element_rect(fill="white"),
+        axis.title = element_blank(), 
+        strip.text.y = element_text(size = 7))+
+  geom_histogram(aes(x=Valores), color="black", fill="lightblue",bins = 30) +
+  facet_grid(rows = vars(Semana1),space = "free") +
+  ylab("Frequência")+
+  labs(caption = "",
+       x="",y="",
+       title = "Gráfico do histograma de cada distribuição na Escala  Avaliação de Depressão de Hamilton")+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
+\centerline{Figura 3: Gráficos dos Histogramas das semanas}
+Como percebemos, o gráfico tem uma distribuição por todas as semanas, não fica concentrado somente em
+um determinado período, já no intervalo de *0* até *10* onde encontra o resultado na escala *(HAM-D)*. No
+eixo horizontal, as barras do histograma acabam ficando concentrada nesse intervalo e indica que foram
+registradas maiores frequências no eixo vertical de *5* a *10* pessoas e os picos das barras fica próxima de *15*
+pessoas com a mesma pontuação na escala de *(HAM-D)*. Nesta pesquisa, foram registrado 96 pacientes como
+segue abaixo usando a seguinte númeração para cada categoria de sexo registrado no canjundo de dados.
+$$
+\text{Paciente} \left\{
+\begin{array}{lcl}
+\ \ \ 0 & : & \text{Para mulheres num total de 35} \\
++1 & : & \text{Para homens num total de 61}
+\end{array}
+\right.
+$$
+Sendo assim, a quantidade de homens que participaram da pesquisa é bem maior que as mulheres. Neste
+caso, para saber mais sobre cada paciente, foi feito um gráfico de histograma das Idades dos pacientes na
+Figura 4 que participaram nos testes clínicos, como podemos perceber no gráfico em seguida.
+```{r,echo=FALSE,fig.align='center',fig.width =5, fig.height = 3,out.width = "200px", out.height="200px"}
+hist(Tfinal$demo_educa_years1,
+     main =  "Histogrma das Idades dos pacientes",
+     xlab =  "Idades dos pacientes",
+     ylab = "Frequências",
+     col = "lightblue")
+```
+\centerline{Figura 4: Gráfico do Histograma das Idades dos pacientes}
+As maiores frequências estão entre as idades de *12* à *18* anos, onde o pico acaba sendo para idade de *15* anos,
+ou seja, nesta pesquisa a fim de identificar a depressão entre jovens, adultos e pessoas com mais idade, onde
+objetivo é encontrar um padrão de comportamento que leva a descobrir quais desses pacientes podem ser do
+grupo tratamento ou placebo, desse modo é realizado diversas análise exploratória a fim de encontrar uma
+melhora de um grupo para outro.
+\begin{table}[ht]
+\centering
+\centerline{Tabela 1: Tabela de cada idade dos pacientes}
+\begin{tabular}{rrrrrrrrrrrrrrrrr}
+  \hline
+Idades & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 15.5 & 16 & 17 & 18 & 19 & 20 & 21 & Total\\ 
+  \hline
+Quantidade  &   1 &   2 &   2 &  11 &   5 &  13 &   9 &   1 &  29 &   4 &  10 &   2 &   2 &   2 & 93 \\ 
+   \hline
+\end{tabular}
+\end{table}
+\newpage
+Na Tabela 1 onde mostra as quantidade de cada paciente com suas respectivas idades fazendo uma com-
+paração com o gráfico da Figura 4 de histogramas das idades, sendo assim, tem-se a frequência numérica na
+Tabela 1 para cada paciente. Logo, no conjunto de dados foram registrados 96 pacientes, só que alguns não
+informaram sua idade, ficando como dados faltantes com o total de *93* pessoas que declararam suas idades.
+
+## 2.2 Gráficos dos BoxPlot ou Diagrama de Caixa
+
+No diagrama de caixa ou gráfico de BoxPlot visa medir a média, mediana e alguns pontos que são considerados
+como outlier, ou seja, valores considerados como dados dispersos, o que se difere drasticamente dos outros
+pontos. Sendo assim, na Figura 4 no gráfico de Boxplot está de acordo com *1* a até a *6* a semana, o gráfico
+indica que na primeira semana houve pontos de outlier em vermelho, vale ressaltar que os gráficos foram
+realizado no geral nos dois grupos Placebo e Tratamento Controle quando os pacientes fizeram o teste clínico
+sendo as diferença entre duas medidas, no início do estudo quanto após a cada semana.
+
+```{r,echo=FALSE,fig.align='center',fig.width = 9, fig.height = 5,out.width = "250px", out.height="250px"}
+
+tabela=scalar_all %>% as_tibble()%>%
+  mutate(hamd_17_score_wk1=ifelse(hamd_17_score_wk1=="NA",0,hamd_17_score_wk1),
+         hamd_17_score_wk2=ifelse(hamd_17_score_wk2=="NA",0,hamd_17_score_wk2),
+         hamd_17_score_wk3=ifelse(hamd_17_score_wk3=="NA",0,hamd_17_score_wk3),
+         hamd_17_score_wk4=ifelse(hamd_17_score_wk4=="NA",0,hamd_17_score_wk4),
+         hamd_17_score_wk6=ifelse(hamd_17_score_wk6=="NA",0,hamd_17_score_wk6),
+         hamd_17_score_wk8=ifelse(hamd_17_score_wk8=="NA",0,hamd_17_score_wk8),
+         hamd_17_score_eval=hamd_17_score_eval,
+         demo_educa_years1=demo_educa_years1,
+         TreatmentCode=TreatmentCode,
+         chronicity=chronicity) 
+
+newdata = tabela %>% 
+  summarise(Semana1 = hamd_17_score_eval- hamd_17_score_wk1,
+            Semana2 = hamd_17_score_eval-hamd_17_score_wk2,
+            Semana3 = hamd_17_score_eval-hamd_17_score_wk3,
+            Semana4 = hamd_17_score_eval-hamd_17_score_wk4,
+            Semana6 = hamd_17_score_eval-hamd_17_score_wk6,
+            Semana7 = hamd_17_score_eval-hamd_17_score_wk8,
+            demo_educa_years1=demo_educa_years1,
+            TreatmentCode=TreatmentCode,
+            chronicity=chronicity)%>%
+  dplyr::select(Semana1 = Semana1,
+                Semana2 = Semana2,
+                Semana3 = Semana3,
+                Semana4 = Semana4,
+                Semana6 = Semana6,
+                Semana7 = Semana7,
+                demo_educa_years1=demo_educa_years1,
+                TreatmentCode=TreatmentCode,
+                chronicity=chronicity)%>%
+  pivot_longer(cols = c(Semana1,Semana2,Semana3,Semana4,Semana6,Semana7), names_to= "Semana1",
+               values_to = "Valores")
+newdata %>% replace(is.na(.),0)%>%
+  ggplot(aes(x=Semana1, y = Valores))+
+  geom_boxplot(width = 0.5, col = "black", fill = "SkyBlue")+
+  #stat_summary(fun.y = "mean", geom = "point")+
+  #geom_hline(yintercept =mean(), linetype = "dashed")+ 
+  # adiciona uma linha na média geral
+  labs(x = "Evolução em cada semana",
+       y = "Resultado do teste clínico",
+       title = "Gráfico de BoxPlot para cada semana")+
+    scale_colour_manual(values = "black")+
+  theme(strip.placement ="outside",
+        strip.background =element_rect(fill="white"))+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
+\centerline{Figura 5: Gráfico das semanas com os dois grupos juntos}
+É possível perceber que as medianas não são iguais em cada semana na Figura 5, com as duas categorias
+dos grupos Placebo e Controle. Assim, ao separar por grupo nota-se uma diferença nos gráficos de boxplot
+da Figura 6. Pois na primeira semana de tratamento às mediana são iguais nos dois grupos com pontos de
+outliers no grupo placebo.
+
+```{r,echo=FALSE,fig.align='center',fig.width = 9, fig.height = 5,out.width = "230px", out.height="230px"}
+
+tabela=scalar_all %>% as_tibble()%>%
+  mutate(hamd_17_score_wk1=ifelse(hamd_17_score_wk1=="NA",0,hamd_17_score_wk1),
+         hamd_17_score_wk2=ifelse(hamd_17_score_wk2=="NA",0,hamd_17_score_wk2),
+         hamd_17_score_wk3=ifelse(hamd_17_score_wk3=="NA",0,hamd_17_score_wk3),
+         hamd_17_score_wk4=ifelse(hamd_17_score_wk4=="NA",0,hamd_17_score_wk4),
+         hamd_17_score_wk6=ifelse(hamd_17_score_wk6=="NA",0,hamd_17_score_wk6),
+         hamd_17_score_wk8=ifelse(hamd_17_score_wk8=="NA",0,hamd_17_score_wk8),
+         hamd_17_score_eval=hamd_17_score_eval,
+         demo_educa_years1=demo_educa_years1,
+         TreatmentCode=TreatmentCode,
+         chronicity=chronicity) 
+
+newdata = tabela %>% 
+  summarise(Semana1 = hamd_17_score_eval- hamd_17_score_wk1,
+            Semana2 = hamd_17_score_eval-hamd_17_score_wk2,
+            Semana3 = hamd_17_score_eval-hamd_17_score_wk3,
+            Semana4 = hamd_17_score_eval-hamd_17_score_wk4,
+            Semana6 = hamd_17_score_eval-hamd_17_score_wk6,
+            Semana7 = hamd_17_score_eval-hamd_17_score_wk8,
+            demo_educa_years1=demo_educa_years1,
+            TreatmentCode=TreatmentCode,
+            chronicity=chronicity)%>%
+  dplyr::select(Semana1 = Semana1,
+                Semana2 = Semana2,
+                Semana3 = Semana3,
+                Semana4 = Semana4,
+                Semana6 = Semana6,
+                Semana7 = Semana7,
+                demo_educa_years1=demo_educa_years1,
+                TreatmentCode=TreatmentCode,
+                chronicity=chronicity)%>%
+  pivot_longer(cols = c(Semana1,Semana2,Semana3,Semana4,Semana6,Semana7), names_to= "Semana1",
+               values_to = "Valores")
+newdata %>%
+  drop_na()%>%
+  mutate(demo_educa_years1=as.integer(demo_educa_years1),
+         TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"))%>%
+  rename(`Tratamento Controle`=TreatmentCode)%>%
+  group_by(Semana1)%>%
+  ggplot(aes(x=demo_educa_years1,y=Valores, fill= `Tratamento Controle`))+
+  theme_bw()+
+  geom_boxplot() +
+  facet_wrap(~Semana1) +
+  ylab("Frequência")+
+  labs(caption = "",
+       x="Idades dos Pacientes",y="Resultado na Escala de (HAM-D)",
+       title = "Gráfico do BoxPlot para o Tratamento Controle")+
+  scale_fill_manual(labels = c("Placebo","Tratamento"), values = c("Wheat", "SkyBlue"))+
+  scale_colour_manual(values = "black")+
+  theme(strip.placement ="outside",
+        strip.background =element_rect(fill="white"))+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
+\centerline{Figura 6: Gráfico do BoxPlot com as idade dos pacientes e o resultado na Escala de \textbf{(HAM-D)}}
+Por conseguinte, no gráfico da Figura 6, temos para cada grupo o gráfico de boxplot na Escala de Avaliação
+de Depressão de Hamilton, comparando ao teste clínico dos pacientes no eixo vertical na *1* a até *6* a semana
+realizado nos dois grupos. Logo, para cada grupo dos pacientes foram avaliados as melhoras obtidas em cada
+semana, na terceira e quarta semana os resultados ficam iguais, os sintomas dos efeitos acabam acontecendo
+na quinta e sexta semana.
+Para o melhor entendimento a respeito das variáveis Cronicidade e sexo foi feito um gráfico de boxplot na
+Figura 6, onde é realizado uma pergunta, Você tem a cronicidade de uma doença ou já teve? *1* para sim, *0*
+para não. E a covariável sexo onde representa *1* se é masculino e *0* se é feminino.
+
+```{r,include=FALSE,fig.align='center',fig.width = 8, fig.height = 5,out.width = "300px", out.height="300px"}
+# Gráfico dos boxplot para cada sexo e cranicidade...ok
+
+
+tb1=y %>% as_tibble()  # Variável resposta
+tb2=cov %>% 
+  as_tibble() %>%
+  mutate(V2= ifelse(V2=="1", "Masculino","Feminino"),
+         V1= ifelse(V1=="1", "Sim","Não"))
+# contém somente as covariáveis de sexo e cronicidade
+par(mfrow=c(1,2))
+boxplot(tb1$value~tb2$V1,
+        col = c("blue","lightblue"),
+        xlab = "Você tem ou já teve essa doença?",
+        ylab = "Resposta experada",
+        main= "Cronicidade") # Cronicidade
+boxplot(tb1$value~tb2$V2,
+        col = c("blue","lightblue"),
+        xlab = "Pacientes participantes",
+        ylab = "Resposta experada",
+        main= "Covariáveis de Sexo") #variável resposta e sexo
+```
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=8cm,height=7cm]{/home/alex/Downloads/boxplot1.png}
+\end{center}
+\end{figure}
+\centerline{Figura 7: Gráfico de BoxPlot das variáveis Cronicidade e Covariáveis de Sexo}
+Desta maneira, é possível perceber que não existe uma mediana igual para a pergunta, até mesmo no gráfico
+ao lado da covariável de sexo em relação ao resultado dos pacientes na primeira semana de teste clínico no
+eixo horizontal que participaram desta pesquisa.
+Com intuito de obter um melhor entendimento a respeito da variável cronicidade quando os pacientes
+preencheram uma ficha de questionário para analisar se tem ou não doença de cronicidade. Na Figura
+7, tem-se as idades dos participantes e resultados dos testes clínicos em cada semana.
+
+
+```{r,echo=FALSE,fig.align='center',fig.width = 8, fig.height = 5,out.width = "300px", out.height="300px"}
+
+# Boxplot  para cada grupo Placebo e Tratamento controle versos com as idade 
+
+newdata %>%
+  drop_na()%>%
+  mutate(demo_educa_years1=as.integer(demo_educa_years1),
+         TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"))%>%
+  rename(`Tratamento Controle`=TreatmentCode)%>%
+  group_by(Semana1)%>%
+  ggplot(aes(x=demo_educa_years1,y=Valores, fill= `Tratamento Controle`))+
+  theme_bw()+
+  geom_boxplot() +
+  facet_wrap(~Semana1) +
+  ylab("Frequência")+
+  labs(caption = "",
+       x="Idades dos Pacientes",y="Resultado na Escala de (HAM-D)",
+       title = "Gráfico do BoxPlot para o Tratamento Controle")+
+  scale_fill_manual(labels = c("Placebo","Tratamento"), values = c("Wheat", "SkyBlue"))+
+  scale_colour_manual(values = "black")+
+  theme(strip.placement ="outside",
+        strip.background =element_rect(fill="white"))+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+```
+\centerline{Figura 8: Gráfico do BoxPlot com as idade dos pacientes e o resultado na Escala de  \textbf{(HAM-D)}}
+Desta maneira, no início da primeira semana começa nos dois grupos ficam bem idêntico, com alguma
+diferença bem pequena, já com passar da semana, os pacientes que não tem cronicidade acabam melhorando
+per apresentar uma mediana menor do que aqueles que têm a doença.
+
+## Gráfico de Dispersão
+
+O gráfico de dispersão é explicado por cada associação que associa um valor de um conjunto de dados
+a um segundo valor de um conjunto de dados. Sendo assim, é o diagrama de dispersão num gráfico de
+dados emparelhados por \textbf{(x,y)} com o eixo x horizontal e eixo *y* vertical. Assim, na Figura 4, nos dois
+seguintes gráficos da primeira e segunda semana, com uma reta para analisar a tendência de crescimento ou
+decrescimento ao longo dessas duas semanas. Separado por grupo em cada gráfico e nos eixos x são Idades
+dos Pacientes e o *y* resultado do teste clínico.
+
+```{r,echo=FALSE,fig.align='center',fig.width = 8, fig.height = 5,out.width = "250px", out.height="250px"}
+fig1=Tfinal%>% as_tibble()%>%
+  transmute(hamd_17_score_wk1=hamd_17_score_wk1,
+            TreatmentCode=TreatmentCode, 
+            idade=as.integer(demo_educa_years1),
+            samana1=hamd_17_score_eval-hamd_17_score_wk1,
+            TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"))%>%
+  rename(`Tratamento Controle`=TreatmentCode)%>%
+  drop_na()%>%
+  arrange(idade)%>%
+  ggplot(aes(idade, samana1, color=`Tratamento Controle`))+
+  geom_point()+
+  geom_smooth(method = "lm", formula = y~x, se=F)+
+  theme_bw()+
+  facet_wrap(~`Tratamento Controle`)+
+  labs(x= "Idades dos pacientes",
+       y="Eslaca de Hamilton",
+       title = "Primeira semana")+
+    theme(strip.placement ="outside",
+        strip.background =element_rect(fill="white"))+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+fig2=Tfinal%>% as_tibble()%>%
+  transmute(hamd_17_score_wk2=hamd_17_score_wk2,
+            TreatmentCode=TreatmentCode, 
+            idade=as.integer(demo_educa_years1),
+            samana2=hamd_17_score_eval-hamd_17_score_wk2,
+            TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"))%>%
+  rename(`Tratamento Controle`=TreatmentCode)%>%
+  drop_na()%>%
+  arrange(idade)%>%
+  ggplot(aes(idade, samana2, color=`Tratamento Controle`))+
+  geom_point()+
+  facet_wrap(~`Tratamento Controle`)+
+  geom_smooth(method = "lm", formula = y~x, se=F)+
+  labs(x= "Idades dos pacientes",
+       y="Eslaca de Hamilton",
+       title = "Segunda semana")+
+  theme_bw()+
+    theme(strip.placement ="outside",
+        strip.background =element_rect(fill="white"))+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+plot_grid(fig1,fig2, labels = c("a)","b)"),ncol = 1, nrow = 2)
+```
+\centerline{Figura 9: Gráfico de Dispersão na primeira e segunda semana}
+
+Em cada ponto representado nos dois gráficos têm relação entre idade do paciente e resultado do teste clínico
+na primeira e segunda semana. A reta que está separada por grupo Placebo e Tratamento Controle, resulta
+em um decrescimento na primeira semana, pois, para cada grupo tiveram uma melhora por conta da reta
+estar calculada a média dos pontos nos gráficos, nesse caso as variáveis são correlacionáveis. Já na segunda
+semana o cenário muda no grupo tratamento controle.<p>
+No entanto, é perceptível que nas idades entre *12* à *18* anos no eixo vertical existe maior concentração de
+pontos nessas idades, tanto para o grupo placebo quanto para o tratamento controle.
+Já quando analisando a segunda semana os valores ficam mais dispersos para o grupo tratamento controle
+não encontrado um padrão específico, logo o grupo placebo acaba continuando com um padrão, mas os
+pontos vão ficando mais disperso um do outro.<p>
+Para cada grupo realizado na Figura 7, onde se encontra no eixo horizontal os valores do resultado do teste
+clínico na escala de Hamilton em cada semana e no eixo vertical as idades dos pacientes.<p>
+Na primeira semana as retas nos dois grupos está estimado á média geral da evolução para cada pacientes
+e segue o mesmo padrão visto na Figura 1, pois na primeira semana os pacientes tende a melhorar, assim,
+
+quando é analisado os quatros gráficos pelas as retas estimadas para cada grupo percebe-se quando um grupo
+melhora o outro acaba não encontrando resultado satisfatório, sendo que dependerá das idade dos pacientes
+e qual semana o paciente melhorou.<p>
+Neste caso, o grupo placebo está sempre melhorando seu quadro clínico, no entanto, essa melhora dependerá
+das idades dos pacientes,por exemplo: nas idades de *9* ao *15* anos têm um diminuição na escala de Hamilton
+o que indica que esses pacientes estão melhorando seu quadro clínico.<p>
+
+```{r,echo=FALSE,fig.align='center',fig.width = 8, fig.height = 7,out.width = "300px", out.height="300px"}
+
+
+f1=Tfinal%>% as_tibble()%>%
+  transmute(hamd_17_score_wk1=hamd_17_score_wk1,
+            TreatmentCode=TreatmentCode, 
+            idade=as.integer(demo_educa_years1),
+            samana1=hamd_17_score_eval-hamd_17_score_wk1,
+            TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"))%>%
+  rename(`Tratamento Controle`=TreatmentCode)%>%
+  drop_na()%>%
+  arrange(idade)%>%
+  ggplot(aes(idade, samana1, color=`Tratamento Controle`))+
+  geom_point()+
+  geom_smooth(method = "lm", formula = y~x, se=F)+
+  theme_bw()+
+  facet_wrap(~`Tratamento Controle`)+
+  labs(x= "Idades dos pacientes",
+       y="Eslaca de Hamilton",
+       title = "Primeira semana")+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+# Gráfico de Dispersão da idades com as pontuações de escala de Hamilton na segunda semana
+
+f2=Tfinal%>% as_tibble()%>%
+  transmute(hamd_17_score_wk2=hamd_17_score_wk2,
+            TreatmentCode=TreatmentCode, 
+            idade=as.integer(demo_educa_years1),
+            samana2=hamd_17_score_eval-hamd_17_score_wk2,
+            TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"))%>%
+  rename(`Tratamento Controle`=TreatmentCode)%>%
+  drop_na()%>%
+  arrange(idade)%>%
+  ggplot(aes(idade, samana2, color=`Tratamento Controle`))+
+  geom_point()+
+  geom_smooth(method = "lm", formula = y~x, se=F)+
+  labs(x= "Idades dos pacientes",
+       y="Eslaca de Hamilton",
+       title = "Segunda semana")+
+  theme_bw()+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+# Gráfico de Dispersão da idades com as pontuações de escala de Hamilton na terceira semana
+
+f3=Tfinal%>% as_tibble()%>%
+  transmute(hamd_17_score_wk3=hamd_17_score_wk3,
+            TreatmentCode=TreatmentCode, 
+            idade=as.integer(demo_educa_years1),
+            samana3=hamd_17_score_eval-hamd_17_score_wk3,
+            TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"))%>%
+  rename(`Tratamento Controle`=TreatmentCode)%>%
+  drop_na()%>%
+  arrange(idade)%>%
+  ggplot(aes(idade, samana3, colour= `Tratamento Controle`))+
+  geom_point()+
+  geom_smooth(method = "lm", formula = y~x, se=F)+
+  theme_bw()+
+  labs(x= "Idades dos pacientes",
+       y="Eslaca de Hamilton",
+       title = "Terceira semana")+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+# Gráfico de Dispersão da idades com as pontuações de escala de Hamilton na quarta semana
+
+f4=Tfinal%>% as_tibble()%>%
+  transmute(hamd_17_score_wk4=hamd_17_score_wk4,
+            TreatmentCode=TreatmentCode, 
+            idade=as.integer(demo_educa_years1),
+            samana3=hamd_17_score_eval-hamd_17_score_wk4,
+            TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"))%>%
+  rename(`Tratamento Controle`=TreatmentCode)%>%
+  drop_na()%>%
+  arrange(idade)%>%
+  ggplot(aes(idade, samana3, colour= `Tratamento Controle`))+
+  geom_point()+
+  geom_smooth(method = "lm", formula = y~x, se=F)+
+  theme_bw()+
+  
+  labs(x= "Idades dos pacientes",
+       y="Eslaca de Hamilton",
+       title = "Quarta semana")+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+par(mfrow=c(2,2))
+plot_grid(f1,f2,f3,f4, labels = c("a)", "b)","c)","d)"),ncol =2, nrow = 2)
+
+```
+\centerline{Figura 10: Gráfico de Dispersão das Idades dos Pacientes com a Escala de Hamilton}
+Logo, em cada faixa de idade, percebe-se que as pontuações ficam concentradas nas idades entre *12* à *17*
+anos até na primeira e segunda semana nos grupos do tratamento controle e placebo, quando chega na na
+segunda semana os pontos ficam mais concentrados nas idades *15* à *16* anos.
+
+## 2.4 Cálculo Estatístico
+
+Para fazer uma análise mais profunda nos dois grupos a respeito de identificar os subgrupos que obtiveram
+uma melhora no quadro clínico durante as *6* semanas entre os dois grupos de tratamento com antidepressivos
+e placebos, será feito na Tabela 2, as médias dos grupos em cada semana separado por sexo e grupo.
+```{r,include=FALSE}
+library(xtable)
+Tfinal %>% as_tibble() %>%
+  mutate(sex=ifelse(sex=="1","Masculino","Feminino"),
+         TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"))%>%
+  group_by(TreatmentCode,sex)%>%
+  summarise(`Semana 1` = mean(hamd_17_score_eval-hamd_17_score_wk1,na.rm=TRUE),
+            `Semana 2` = mean(hamd_17_score_eval-hamd_17_score_wk2,na.rm=TRUE),
+            `Semana 3` = mean(hamd_17_score_eval-hamd_17_score_wk3,na.rm=TRUE),
+            `Semana 4` = mean(hamd_17_score_eval-hamd_17_score_wk4,na.rm=TRUE),
+            `Semana 5` = mean(hamd_17_score_eval-hamd_17_score_wk6,na.rm=TRUE),
+            `Semana 6` = mean(hamd_17_score_eval-hamd_17_score_wk8,na.rm=TRUE), .groups ='drop')%>%
+  rename(`Tratamento`=TreatmentCode,
+         `Sexo`=sex)%>%
+  xtable()
+  #knitr::kable(digits=2, caption = "Tabela das médias dos grupos em cada semana")
+```
+
+\begin{table}[ht]
+\centering
+\centerline{Tabela 2: Tabela das médias dos grupos em cada semana}
+\begin{tabular}{llrrrrrr}
+  \hline
+Tratamento & Sexo & Semana 1 & Semana 2 & Semana 3 & Semana 4 & Semana 5 & Semana 6 \\ 
+  \hline
+Placebo & Feminino & 5.05 & 6.53 & 8.19 & 7.24 & 9.83 & 9.61 \\ 
+Placebo & Masculino & 1.97 & 2.23 & 2.55 & 3.90 & 5.07 & 4.37 \\ 
+Tratamento & Feminino & 3.13 & 4.87 & 5.85 & 7.54 & 8.58 & 8.14 \\ 
+Tratamento & Masculino & 1.61 & 3.07 & 4.75 & 5.10 & 7.14 & 7.07 \\ 
+   \hline
+\end{tabular}
+\end{table}
+Como podemos verificar que as médias do grupo Placebo em cada categoria de sexo, na Tabela 2, têm mais
+pontuações menores no grupo placebo quando são homens sendo *1.97* da média de pontuação nessa categoria.
+Na primeira semana , o que significa esses valores correspondem baixas notas na escala de Hamilton, o que
+é bom para os Especialistas, quanto menor as notas é quanto o paciente tem mais chance de ser do grupo
+Placebo.
+Quando analisando o grupo do Tratamento e suas pontuações ao feminino sendo *3.13* da média, na primeira
+semana do resultado do teste clínico e por conseguinte tem uma diminuição ao longo da 6 semana. Esses
+resultados são de uma pequena amostra aleatória de *96* pacientes, às pontuação são altas para o grupo
+feminino quanto são classificados como placebo e tratamento controle, o que significa uma indicação elevada
+para as mulheres que sofrem com depressão.
+
+## 2.5 Analisando as correlações com as variáveis
+
+Ao analisar as variáveis de cronicidade em relação ao sexo quando os pacientes obtiveram os resultados da
+primeira semana na escala de Hamilton. Desta maneira, os pacientes preencheram a ficha da pesquisa na
+avaliação, com a fim de identificar possíveis doenças graves, uma dessas variáveis que será analisada é a
+doença de cronicidade seja ela baixa ou alta. Aqui serão atribuídos os valores *1* para Alto e *0* para Baixo.
+Então, será comparado numa gráfico de densidade na Figura 8, separado por sexo e será possivel análisar da
+correlação entre essas variáveis.
+
+```{r,echo=FALSE,fig.align='center',fig.width = 7, fig.height = 5,out.width = "300px", out.height="300px"}
+
+# Gráfico de densidade separado por sexo com a categoria do grupo cronicidade bixa e alta
+# Novo gráfico, Densidade de cronicidade
+f11=Tfinal %>%
+  mutate(demo_educa_years1=as.integer(demo_educa_years1),
+         chronicity=ifelse(chronicity=="1","Alta","Baixa"),
+         sexo=ifelse(sex==1,"Mulher","Homens"))%>%
+  rename(`Cronicidade`=chronicity)%>%
+  ggplot(aes(Resposta, colour =`Cronicidade`))+
+  geom_density()+
+  labs(caption = "",
+       x="",y="Densidade",
+       title = "Gráfico da densidade")+
+  theme_bw()+
+  facet_wrap(~sexo) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.background =element_rect(fill="white"))
+# Gráfico de densidade separado por sexo com a categoria do grupo controle e tratamento
+##### Dencidade de cronicidade  nos dois grupos
+f12=Tfinal %>%
+  mutate(TreatmentCode=ifelse(TreatmentCode=="PLA","Placebo","Tratamento"),
+         sexo=ifelse(sex==1,"Mulher","Homens"))%>%
+  rename(`Tratamento Controle`=TreatmentCode)%>%
+  ggplot(aes(Resposta, colour =`Tratamento Controle`))+
+  geom_density()+
+  labs(caption = "",
+       x="",y="Densidade",
+       title = "Gráfico da densidade")+
+  theme_bw()+
+  facet_wrap(~sexo) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.background =element_rect(fill="white"))
+plot_grid(f11,f12,labels = c("a)","b)") ,ncol =1, nrow = 2)
+
+```
+\centerline{Figura 11: Gráfico de densidade separado por sexo e em \textbf{a)} tem a cronicidade alta e baixa e \textbf{b)} os dois grupos}
+Logo, em *1)* no sexo masculino houve uma tendencia de crecimento para cronicidade alta e para as mulheres
+ficaram aproximadamente iguais. Deste modo, no item *2)*, os dois grupos têm uma correlação com o tempo
+da semana do resultado do teste clínico na escala de Hamilton.
+
+# 3. Construindo uma suposição de modelagem de dados
+
+ Em todas as análises estatísticas, têm um grande foco na construção de um modelo matemática que possa ser possível descrever e interpretar, sendo assim, será usado as técnicas Estatísticas nesta pesquisa e juntamente com o software  R da sua versão *4.1.3* e as inferências estatística  para analisar o modelo  que será usado com o fim   de encontrar uma modelagem matemática que possa ser possível de interpretar. Desta maneira, nestas seções será abordado uma breve explicação do modelo de dados longitudinal, possíveis modelos encontrados, inferências estatísticas e controle do rigor estatístico.
+
+## 3.1 Uma explicação para o modelo dados longitudinal
+
+Desta maneira, será construído uma suposição de modelagem de dados usando na pesquisa de interesse, usando a matriz *14*  por *45* e o tempo que de início que os pacientes entraram em estado clínico ao longo das *6* semanas. Como cada semana, se refere uma medida de uma variável resposta, como foi feito uma  análise exploratória dos dados profunda bem como, analisando o comportamento da estrutura média, mediadas resumo, perfis individuais e técnicas de suavização, assim   pode-se usar uma modelagem de dados longitudinal.<p>
+Nos dados longitudinal, o interesse é medir as respostas repetidas, como no conjunto de dados temos 6 semanas que foram medido em cada paciente com uma nota dada por especialista no início da avaliação do estudo foi atribuído  nota na Escala de Avaliação de Depressão de Hamilton *( HAM-D )* tanto no início do estudo quanto após uma semana, e cada paciente foi medido nas frequências de teta (1-7Hz) e alpha (7-14Hz) onde as pontuação mais alta indica que os pacientes estão melhorando.<p>
+ Assim, o modelo de dados longitudinal é usado em unidades que são, geralmente, medidas repetidamente ao longo do tempo, como é o caso desta pesquisa. Desta maneira, os indivíduos foram divididos aleatoriamente em dois grupos (A o foi o Tratamento Controle, B o Placebo) e foi registrado suas frequências em cada semana.<p>
+\textbf{Notação para Dados Longitudinal}
+Notação (Estrutura Balanceada)
+
+
+$$
+Y_{i}=(Y_{i1},...,Y_{in})', \ \ i = 1,...,N
+$$
+é o vetor de respostas do i-ésimo indivíduo. Seguindo a seguinte estrutura,
+
+- N: número de indivíduos;
+- Número total de observações: Nn;
+- $E(Y_{i})=(E(Y_{i1}),...,E(Y_{in}))'$;
+- $\mu_{ij}=E(Y_{ij})$;
+- $\sigma_{j}^{2}:$ variância de $Y_{ij}$;
+- $\sigma_{jk}:$ covariância entre $Y_{ij}$ e $Y_{ik}$
+
+No tempo inicial, (linha de base j=1) foram selecionando os indivíduos com diferentes idades e medido em cada j-enésimo semanas. Com isso, existe um efeito longitudinal, variação intra-indivíduo? Variação da resposta média em função da idade no mesmo indivíduo. Desta maneira, quanto é verificado o *Planejamento de Experimentos- Com Um fator em bloco*, o que podemos observar é comparar a resposta média em cada tempo, pelo seguinte modelo de dados longitudinal, 
+
+
+$$
+Y_{ij}=\mu+\alpha_{i}+\tau_{j}+\varepsilon_{ij},
+$$
+em que, $\varepsilon_{ij} \sim N(0,\sigma^{2})$
+Neste caso:
+
+- Os blocos são os individuais.
+- $\alpha_{i}$: o efeito do bloco (indivíduo), i=1,...,N
+- $\alpha_{i}$: pode ser tratado como efeito fixo ou aleatório. Neste último caso, 
+
+$$
+\alpha_{i} \sim N(0,\sigma^{2}_{\alpha})
+$$
+- Os tratamentos são os próprios tempos
+- $\tau_{j}$: O efeito do tratamento (tempo), *j=1,...,n*
+
+Logo, não é possível aleatorizar tratamento dentro do bloco.<p>
+
+Sendo assim, o modelo de dados longitudinal, irá seguir a seguinte estrutura onde para cada $Y_{ij}$ será a resposta medida no tempo, ou seja, nas semanas *1* até a *6*, então, o *i* é  medido no i-ésimo paciente sendo $i=1,...,96$ e *j* é medido no j-ésimo tempo em cada semana, sendo $j=1,...,6$, com um efeito aleatório $\alpha_{i}$. Então,
+
+$$
+Y_{ij}=\alpha_{i}+\beta_{i}t_{ij}+\epsilon_{ij}; \ \ \ \ \ \ \epsilon_{ij} \sim N(0,\sigma^{2}); \ \ \ \ \ \ \alpha_{i} \sim N(\mu,\sigma^{2})
+$$
+$\epsilon_{ij}$ e $\alpha_{i}$ são independentes. Desta maneira, o $Y_{ij}$ é a resposta observada para o i-ésimo indivíduo na observação j de cada semana, $\alpha_{i}$ é o intercepto aleatório, $t_{ij}$ é o tempo (de cada semana), $\beta_{i}$ é o coeficiente de regressão para o tempo, e $\epsilon_{ij}$ é o erro para o i-ésimo indivíduo na observação j, e têm distribuição Normal com média zero e matriz de covariância. Nesta equação  o intercepto é aleatório que indica que pode variar entre indivíduos, mas se mantém-se na inclinação fixa igual a $\beta_{i}$
+
+## 3.2 Ajustando de Modelos Lineares Generalizados de Efeitos Mistos
+
+Esse modelo estatístico tem como o intercepto como aleatório, ou seja, possui mais de um termo ou efeito aleatório, além dos efeitos fixos neste caso é chamado de modelo com efeito misto, para o leitor verificar com mais detalhes pode ser consultado em \textbf{(vou colocar a referencia aqui)}, com isso as variáveis de interesse para esssa modelagem são; os individuos, sexo é *0* quanto for homem e *1* quando mulher, cronicidade é *1* para alta e *0* para baixo, tempo sendo as *6* semanas , tratamento é *0* quando for medicamento e *1* se é placebo e por fim teremos uma variável resposta o  $Y_{i,j}$ será  representado quando   $i=1$ será o resultado do teste clínico na *$1^{\underline{a}}$,..., $6^{\underline{a}}$* semana, então, *i*  vai *1,...,6* e  *j* são identificação dos indivíduos no nível de cada semana naquela data e no resultado do teste clínico,logo  *$j$* vai de *$1,..., 96$* 
+*Informação das variáveis do conjunto de banco de dados para ser trabalhado no modelo de dados longitudinal*<p>
+
+- $Id_{i}$ é Indivíduo, sendo *$i=1,...,96$*;
+- $t_{i,j}$ é Tempo da indicação *$i=1$* em cada uma semana, *$i=1,..,6$*, e *j* é nível de cada bloco sendo *j=1,...,96*;
+- $Tratm_{i}$ é o Tratamento, logo, tratamento controle (medicamento) será *0* e placebo é *1*, *$i=0,1$*;
+- $soxo_{i}$  é  sexo sendo *$0$* para  Homens e $1$ se for Mulher, *$i=0,1$*;
+- $cronic_{i}$ é cronicidade onde *$i= 1$* alta, $0$ caso contrário baixo;
+- $idade_{i}$ em cada idade do indivíduo, temos *$i=1,...,96$*;
+- $Y_{i,j}$ será quando o *$i=1$* quando o indivíduo  tem o resultado teste clínico na $1^{\underline{a}}$ e assim por diante, então *i=1,...,6* e  *j* são as semanas que o pacientes ficaram alocada em cada semana sendo *j = 1,..., 96*, que pode ser chamado de nível dos blocos em cada semana;
+
+Desta maneira será representa a matriz do conjunto de dados da seguinte maneira.<p>
+
+
+
+$$
+\text{Matriz}_{[96,6]}=\begin{bmatrix}
+    \text{Id}_{1}     & \text{t}_{1,1}  & \text{Tratm}_{1} & \text{sexo}_{1} & \text{cronic}_{1} & \text{idade}_{1} & Y_{1,1}\\   
+    \text{Id}_{1}     & \text{t}_{2,1}  & \text{Tratm}_{1} & \text{sexo}_{1} & \text{cronic}_{1} & \text{idade}_{1} & Y_{2,1}\\   
+    \text{Id}_{1}     & \text{t}_{3,1}  & \text{Tratm}_{1} & \text{sexo}_{1} & \text{cronic}_{1} & \text{idade}_{1} & Y_{3,1}\\   
+    \text{Id}_{1}     & \text{t}_{4,1}  & \text{Tratm}_{1} & \text{sexo}_{1} & \text{cronic}_{1} & \text{idade}_{1} & Y_{4,1}\\   
+    \text{Id}_{1}     & \text{t}_{5,1}  & \text{Tratm}_{1} & \text{sexo}_{1} & \text{cronic}_{1} & \text{idade}_{1} & Y_{5,1}\\   
+    \text{Id}_{1}     & \text{t}_{6,1}  & \text{Tratm}_{1} & \text{sexo}_{1} & \text{cronic}_{1} & \text{idade}_{1} & Y_{6,1}\\   
+    \text{Id}_{2}     & \text{t}_{1,2}  & \text{Tratm}_{2} & \text{sexo}_{2} & \text{cronic}_{2} & \text{idade}_{2} & Y_{1,2}\\   
+    \text{Id}_{2}     & \text{t}_{2,2}  & \text{Tratm}_{2} & \text{sexo}_{2} & \text{cronic}_{2} & \text{idade}_{2} & Y_{2,2}\\   
+    \text{Id}_{2}     & \text{t}_{3,2}  & \text{Tratm}_{2} & \text{sexo}_{2} & \text{cronic}_{2} & \text{idade}_{2} & Y_{3,2}\\   
+    \vdots            & \vdots          &  \vdots          & \vdots         &  \vdots            & \vdots           & \vdots  \\
+    \text{Id}_{i}     & \text{t}_{i,j}  & \text{Tratm}_{i} & \text{sexo}_{i} & \text{cronic}_{i} & \text{idade}_{i} & Y_{i,j}\\
+\end{bmatrix}
+$$
+ Para o melhor entendimento desta \textbf{Matriz} tem-se  a tabela com as  *10* primeiras observação do conjunto de dados na qual será trabalhado para um possível modelo. 
+\begin{table}[ht]
+\centering
+\centerline{Tabela 3: Conjunto de dados no formato adequado para modelagem estatística}
+\begin{tabular}{rrrrrrr}
+  \hline
+ $\text{Id}_{i}$     & $\text{t}_{i,j}$  & $\text{Tratm}_{i}$ & $\text{sexo}_{i}$ & $\text{cronic}_{i}$ & $\text{idade}_{i}$ & $Y_{i,j}$ \\
+  \hline
+ 1 &   1 & 1.00 &   1 &   1 & 18.00 &   9 \\ 
+ 1 &   2 & 1.00 &   1 &   1 & 18.00 &  10 \\ 
+  1 &   3 & 1.00 &   1 &   1 & 18.00 &   7 \\ 
+   1 &   4 & 1.00 &   1 &   1 & 18.00 &  11 \\ 
+  1 &   5 & 1.00 &   1 &   1 & 18.00 &   6 \\ 
+  1 &   6 & 1.00 &   1 &   1 & 18.00 &   5 \\ 
+  2 &   1 & 1.00 &   0 &   1 & 16.00 &   1 \\ 
+  2 &   2 & 1.00 &   0 &   1 & 16.00 &  -2 \\ 
+  2 &   3 & 1.00 &   0 &   1 & 16.00 &  -2 \\ 
+   2 &   4 & 1.00 &   0 &   1 & 16.00 &   1 \\ 
+   \hline
+\end{tabular}
+\end{table}
+ Sendo assim, vale ressaltar que o conjunto de dados original tem *44* colunas com *96* linhas com todas as variáveis quando os pacientes responderam o questionário para fazer a pesquisa, para cada coluna tem uma variável do paciente como pela análise exploratória dos dados foi possível identificar as variáveis mais importante descrita tanto na matriz quando no novo formato do conjunto de dados na Tabela 3. Logo, modelo é será da seguinte maneira. 
+$$
+\text{Y}_{ij}=\alpha_{i}+\beta_{1}\text{Tratm}_{i}+\beta_{2}\text{sexo}_{i}+\beta_{3}\text{idade}_{i}+\beta_{4}\text{cronic}_{i}+\beta_{5,j}\text{t}_{i,j}+\varepsilon_{i,j} 
+$$
+$$
+\alpha_{i} \sim N(\beta_{0},\sigma^{2}),\ \ \ \ \ \ \beta_{5,i} \sim N(\beta_{5},\sigma^{2}_{s}), \ \ \ \ \ \ t_{i,j}\ \  \text{sendo} \ \ i=1,2,3,4,5,6 \ \ \text{e} \ \ j=1,2,3,..,96
+$$
+ Sendo assim, tem-se um modelo de *Lineares Generalizados de Efeitos Mistos*, bem como o intercepto aleatório seguindo uma distribuição Normal $\alpha_{i} \sim N(\beta_{0},\sigma^{2})$, $\beta_{5,i} \sim N(\beta_{5},\sigma^{2}_{s})$. Logo, o modelo se encontra da seguinte maneira usando o pacote `library(lme4)` na função `glmer(`$\text{Y}_{ij} \sim \alpha_{i}+\beta_{1}\text{Tratm}_{i}+\beta_{2}\text{sexo}_{i}+\beta_{3}\text{idade}_{i}+\beta_{4}\text{cronic}_{i}+\beta_{5,j}\text{t}_{i,j}+\varepsilon_{i,j}$`)` e abaixado o pacote  no software *R* na versão 4.1.3, temos a seguinte saída do modelo. Então;
+$$
+Y_{ij}= 7.44    -2.44 \text{Tratm}_{i}   -0.01\text{sexo}_{i}    -1.65\text{cronic}_{i}    -0.009\text{idade}_{i}, \ \ \ i = 1,...,96, \ \ \ j=1,...,6
+$$
+
+ Neste modelo, existe as variáveis da seleção na seção *1* até a *2*, o modelo proposto tem a seguinte variáveis onde $Y_{i,j}$ são as respostas dos indivíduos quando eles melhoram em cada grupo, os $\beta's$ são preditora do modelo.
+
+
+```{r, include=FALSE}
+dados =  scalar_all %>% as_tibble() %>%
+  mutate(semana1=hamd_17_score_eval-hamd_17_score_wk1,
+         semana2=hamd_17_score_eval-hamd_17_score_wk2,
+         semana3=hamd_17_score_eval-hamd_17_score_wk3,
+         semana4=hamd_17_score_eval-hamd_17_score_wk4,
+         semana6=hamd_17_score_eval-hamd_17_score_wk6,
+         semana8=hamd_17_score_eval-hamd_17_score_wk8,
+         ID=1:96) %>%
+  replace(is.na(.),0)
+######################### O tempo está ok ####################################################
+# Para cada grupo de 6 temos uma individuo  que é percorrido o i, sendo Individuo Y_i, onde i=1,...,
+individuo<- rep(c(1:96),1) %>% as_tibble()
+individuo 
+individ <- data.frame(rep(1:6,96),rep(1:6,96),rep(1:6,96),rep(1:6,96),rep(1:6,96),rep(1:6,96)) %>% 
+  as_tibble() %>%
+  pivot_longer(cols = c( rep.1.6..96. ,
+                         rep.1.6..96..1,
+                         rep.1.6..96..2 ,
+                         rep.1.6..96..3,
+                         rep.1.6..96..4 ,
+                         rep.1.6..96..5), names_to= "Individuos",
+               values_to = "Valores") %>% transmute(Valores)%>%
+  rename(Id= Valores)
+## t
+ti<-rep(1:6,96) %>% as_tibble() %>% rename(tjj=value)
+#---------------------------------------------------------------------------------------------
+
+############# O tratamento está ok ############################################################
+# Para cada 6 sequência, os tratamenos irá corresponder um individuo, trat_i, onde i=1,...,6
+trat1=dados %>% transmute(TreatmentCode= ifelse(TreatmentCode=="PLA",1,0)) 
+trat=trat1[1]
+for (i in 1:length(trat)) {
+  tratm= rep(trat[,1],6)
+  return(data.frame(tratm))}
+tratm1=tratm %>% data.frame() %>% as_tibble() %>%
+  transmute(TreatmentCode1=TreatmentCode,
+            TreatmentCode2=TreatmentCode.1,
+            TreatmentCode3=TreatmentCode.2,
+            TreatmentCode4=TreatmentCode.3,
+            TreatmentCode5=TreatmentCode.4,
+            TreatmentCode6=TreatmentCode.5)%>%
+  pivot_longer(cols = c(TreatmentCode1,TreatmentCode2,
+                        TreatmentCode3,TreatmentCode4,
+                        TreatmentCode5,TreatmentCode6), names_to= "Tratamento",
+               values_to = "Valores") %>%
+  rename(tratm=Valores) %>% transmute(tratm)
+#------------------------------------------------------------------------------------------
+######################### Sexo está ok. ####################################################
+# Para cada grupo de 6 é um identificado como indivíduo
+sexo11=dados %>% transmute(sex) 
+sexo1=sexo11[1]
+for (i in 1:length(sexo1)) {
+  sx= rep(sexo1[,1],6)
+  return(data.frame(sexo1))}
+sexo=sx %>% data.frame() %>% as_tibble()%>%
+  pivot_longer(cols = c(sex,sex.1,
+                        sex.2,sex.3,
+                        sex.4,sex.5), names_to= "sexo",
+               values_to = "Valores")%>%
+  rename(sx_i = Valores) %>% transmute(sx_i)
+#--------------------------------------------------------------------------------------
+##### Cranicidade 
+cranicida <- dados %>% transmute(chronicity)
+cranicida[,1]
+for (i in 1:length(cranicida)) {
+  cronic= rep(cranicida[,1],6)
+  return(data.frame(cranicida))}
+cronic=cronic %>% data.frame() %>% as_tibble() %>%
+  pivot_longer(cols = c(chronicity,chronicity.1,
+                        chronicity.2,chronicity.3,
+                        chronicity.4, chronicity.5), names_to= "sexo",
+               values_to = "Valores")%>%
+  transmute(cronic_i=Valores)
+###### Idade 
+idade <- dados %>% transmute(demo_educa_years1)
+for (i in 1:length(idade)) {
+  idade1= rep(idade[,1],6)
+  return(data.frame(idade))
+}
+idade1=idade1 %>% data.frame() %>% as_tibble() %>%
+  transmute(idade1=demo_educa_years1,
+            idade2=demo_educa_years1.1,
+            idade3=demo_educa_years1.2,
+            idade4=demo_educa_years1.3,
+            idade5=demo_educa_years1.4,
+            idade6=demo_educa_years1.5)%>%
+  pivot_longer(cols = c(idade1,idade2,idade3, idade4,idade5,idade6), names_to="idade_individuos",
+               values_to = "idade") %>%
+  transmute(idade_i=idade)
+idade1
+###### variável t de cada semana percorrendo os t_ij 
+t <- dados %>% transmute(semana1,semana2,semana3,semana4,semana6,semana8)
+for (i in 1:length(t)) {
+  tempo= rep(t[1:6],1)
+  return(data.frame(t))
+}
+tempo %>% data.frame()
+Yij=tempo %>% data.frame() %>% as_tibble() %>%
+  pivot_longer(cols = c(semana1,semana2,semana3,
+                        semana4,semana6,semana8), names_to="tij",
+               values_to = "valores")%>%
+  transmute(Yijk=valores)
+####################################################################################################
+# Biblioteca que será usando nas análises 
+library(nlme)
+library(lme4)
+library(buildmer)
+library(tidyverse)
+library(stevemisc) 
+library(stevedata)
+library(fitdistrplus)
+library('car')
+library(lmtest)
+library(boot)
+library(nortest)
+library(boot)
+# Informação das colunas do banco de dados
+#Id=Individuo, tjj=Tempo da semana 1 até a 6, tratm= medicamento=0, placebo=1,
+#sx_i= onde i é igual 0 é homem e 1 quando mulhaer,
+#cronic_i= onde i = 1 alta, 0 abaixa, idade_i=i vai de cada idade do inividuo,
+#Yijk= quando o i=1 tem o resultado  na primeira, 
+#i=1,...,6 semana j o a semana sendo j = 1,..., 6 e  k são os blocos de cada semana sendo k=1,...,96
+######################### Construindo o data.fram final ###########################################
+tabfnl <- data.frame(individ, ti, tratm1,sexo, cronic,idade1, Yij) %>% as_tibble() 
+attach(tabfnl)
+##################################################################################################
+################ Usando o modelo de dados longitudinal ###########################################
+##################################################################################################
+############### Ajustando Modelos Lineares Generalizados de Efeitos Mistos ######################
+###### Esse modelo que está no relatório. ##############3
+## Esse modelo preciso arrumar ainda
+ajuste.0 <-  glmer(formula =Yijk ~ sx_i + tratm + cronic_i+idade_i+((1+tjj)|Id) , 
+                   (family=gaussian(link = "identity")),
+                  data = tabfnl)
+ajuste.0
+majustato=summary(ajuste.0)
+majustato
+anovaM=anova(ajuste.0)
+anovaM
+# Análise de resíduos ####
+fit01 = fitted(ajuste.0)
+fit01
+plot(fit01)
+#criando objeto com os coeficientes do modelo (efeitos fixos)
+cof <- fixef(ajuste.0)
+cof
+# Estudo do diagnostico do modelo
+
+residuo <-majustato$residuals
+# Testes de Normalidade para o modelo ajustado
+shapiro.test(residuo)
+lillie.test(residuo)
+qqnorm(residuo)
+qqline(residuo,col=2)
+cvm.test(residuo)
+ad.test(residuo)
+# Análisando o residuos
+hist(residuo, main = "Histograma dos Resíduos", ylab = "Frequência", col = "gray", 
+     sub="Figura 12 : Distribuição do histograma dos resíduos padronizado") 
+```
+
+## 3.3 Diagnóstico do modelo 
+
+ A principal importância de analisar o diagnóstico de um modelo é verificar se existe homocedasticidade, variância constante com as variáveis preditoras que foi selecionada pela análise exploratória, também será verificado a normalidade do ajuste do modelo. 
+
+```{r,echo=FALSE,fig.align='center',fig.width = 4, fig.height = 3,out.width = "150px", out.height="150px"}
+hist(residuo, main = "Histograma dos Resíduos", ylab = "Frequência", col = "#FFCCCC", 
+     probability = TRUE,
+     sub="") 
+lines(density(residuo), col = "#990000", lwd = 1)
+```
+\centerline{Figura 12:Distribuição do histograma dos resíduos padronizado}
+ Como pode ser percebido, no gráfico da Figura 12, existe  uma distribuição centrada em torno do zero (0), ou seja, os resíduos estão padronizado, em uma explicação da terminologia da palavra *RESÍDUO*, vem da Estatística, quer dizer a diferença entre o valor observado e o valor real (ou mais próximo da realidade), numa variável preditora, pode ser chamado de erro. Desta maneira, devemos fazer uma análise mais profunda na normalidade do ajuste do modelo. Pela Tabela 3 temos a seguinte normalidade: os p-valores. 
+\begin{table}[ht]
+\centering
+\centerline{Tabela 4 : Testes de hipótese para normalidade dos Resíduos}
+\begin{tabular}{llrrrrrr}
+  \hline
+Teste & Tema & p-valor \\
+  \hline
+Cramer-von Mises & Normalidade &  2.008e-07\\
+Anderson-Darling & Normalidade &  8.474e-10\\
+Shapiro-Wilk & Normalidade & 3.594e-08\\
+Lilliefors (Kolmogorov-Smirnov) & Normalidade & 1.194e-08\\
+   \hline
+\end{tabular}
+\end{table}
+Como no teste de normalidade do ajuste do modelo, todos os teste foram rejeitados com  $p-valor<0,05$, para normalidade dos resíduos do ajuste do modelo não está adequado. Ou seja, não segue uma distribuição normal no ajuste do modelo. 
+ 
+
+
+
+
+
+
+
+
+
+
+
+

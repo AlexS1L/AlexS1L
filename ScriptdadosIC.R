@@ -3,6 +3,7 @@
 ####### Alex dos Santos Lima RA: 230560 ############
 ####################################################
 # Limpando o Environmon is empty
+.libPaths("/home/alex/R")
 rm(list = ls()) 
 ## Biblioteca para ser usada do projeto
 library(leaps)

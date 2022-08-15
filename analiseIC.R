@@ -13,6 +13,7 @@ rm(list=ls(all=TRUE)) # limpar a console
 library(nlme)
 library(tidyverse)
 library(dplyr)
+library(plyr)
 # Abaixando a base de dados no Rstudio
 load("/home/alex/Downloads/Early.RData")
 # Variaveis que será usado nas an??lises do modelos de dados longitudinal
